@@ -1,0 +1,13 @@
+﻿@model Hotel_5.Models.Bookings
+@{
+    ViewData["Title"] = "Booking Success";
+}
+
+<script>
+    window.setTimeout(function(){
+window.location='@Url.Action("Index","Home")';
+}, 3500);
+</script>
+
+<h1>Congratulations! Room Reserved.</h1>
+<h3>You will be redirected to the Home page.</h3>

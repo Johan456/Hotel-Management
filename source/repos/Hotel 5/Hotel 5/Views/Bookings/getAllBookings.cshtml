@@ -1,0 +1,36 @@
+﻿@model List<Hotel_5.Controllers.BookingsController.UserBooking>
+@{
+    ViewData["Title"] = "All Guests in Rooms";
+}
+
+<h1>All Guests in Rooms</h1>
+
+<div>
+    <table class="table">
+        <tr>
+            <td>Guest</td>
+            <td>Room Nr.</td>
+            <td>Checked in date</td>
+            <td>Check out date</td>
+        </tr>
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td>
+                    @v.UserName
+                </td>
+                <td>
+                    @v.roomId
+                </td>
+                <td>
+                    @v.checkInDate.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @v.checkOutDate.ToString("dd/MM/yyyy")
+                </td>
+            </tr>
+
+        }
+    </table>
+</div>
+

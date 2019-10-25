@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Hotel_5.Models.Amenities>
+
+@{
+    ViewData["Title"] = "Amenities";
+}
+
+<h1>Amenities</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AmenityName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmenityName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
