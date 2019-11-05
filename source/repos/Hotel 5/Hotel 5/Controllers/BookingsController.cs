@@ -23,8 +23,8 @@ namespace Hotel_5.Controllers
             dbContext = context;
         }
 
+
         // GET: Bookings/Create
-        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -50,6 +50,7 @@ namespace Hotel_5.Controllers
         }
 
         // POST: Bookings/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookingId,CheckInDate,CheckOutDate")] Bookings bookings)
@@ -85,6 +86,7 @@ namespace Hotel_5.Controllers
         {
             public string userId { get; set; }
             public string UserName { get; set; }
+            public string FirstName { get; set; }
             public int bookingId { get; set; }
             public int roomId { get; set; }
             public DateTime checkInDate { get; set; }
@@ -99,13 +101,14 @@ namespace Hotel_5.Controllers
         {
             List<UserBooking> userbooking;
             userbooking  = (from b in dbContext.Bookings
-                               join u in dbContext.Users
+                               join u in dbContext.ApplicationUsers
                                on b.UserId equals u.Id
                                where(b.CheckInDate <= DateTime.Now
                                && b.CheckOutDate >= DateTime.Now)
                                select new UserBooking{ 
                                userId = u.Id,
                                UserName = u.UserName,
+                               FirstName = u.FirstName,
                                bookingId = b.BookingId,
                                roomId = b.RoomId,
                                checkInDate = b.CheckInDate,

@@ -52,7 +52,10 @@ namespace Hotel_5.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    TimesBooked = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -211,7 +214,12 @@ namespace Hotel_5.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "fa88e6c7-3f26-41e3-b26e-d12e084404be", "f8a6195a-1643-4249-bfd6-f68d6e5c1ef3", "Admin", "ADMIN" });
+                values: new object[] { "0513644b-d0fe-4f4c-a04f-9038cec2693c", "55f3eef5-1f84-461d-8224-72d531a599fb", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "b364e5b4-b114-4ed1-9e05-3909caa58494", "02d3ef45-2482-46d6-a241-6967c1988b6a", "Receptionist", "RECEPTIONIST" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

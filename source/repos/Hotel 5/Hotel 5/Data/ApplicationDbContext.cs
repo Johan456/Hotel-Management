@@ -14,8 +14,9 @@ namespace Hotel_5.Data
         {
         }
 
-        
 
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Bookings> Bookings { get; set; }
         public DbSet<Payment> Payment { get; set; }
         public DbSet<Amenities> Amenities { get; set; }
@@ -29,6 +30,7 @@ namespace Hotel_5.Data
             // Add your customizations after calling base.OnModelCreating(builder);
 
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() });
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Receptionist", NormalizedName = "Receptionist".ToUpper() });
         }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel_5.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191020171554_initial")]
+    [Migration("20191105173009_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,10 +122,17 @@ namespace Hotel_5.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fa88e6c7-3f26-41e3-b26e-d12e084404be",
-                            ConcurrencyStamp = "f8a6195a-1643-4249-bfd6-f68d6e5c1ef3",
+                            Id = "0513644b-d0fe-4f4c-a04f-9038cec2693c",
+                            ConcurrencyStamp = "55f3eef5-1f84-461d-8224-72d531a599fb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "b364e5b4-b114-4ed1-9e05-3909caa58494",
+                            ConcurrencyStamp = "02d3ef45-2482-46d6-a241-6967c1988b6a",
+                            Name = "Receptionist",
+                            NormalizedName = "RECEPTIONIST"
                         });
                 });
 
@@ -163,6 +170,10 @@ namespace Hotel_5.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -216,6 +227,8 @@ namespace Hotel_5.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -300,6 +313,19 @@ namespace Hotel_5.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Hotel_5.Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TimesBooked")
+                        .HasColumnType("int");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

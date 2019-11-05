@@ -8,23 +8,33 @@ namespace Hotel_5.Models
 {
     public class ApplicationDbInitializer
     {
-        public static void SeedUsers(UserManager<IdentityUser> userManager)
+        public static void SeedUsers(UserManager<ApplicationUser> userManager)
         {
-            if (userManager.FindByEmailAsync("abc@xyz.com").Result == null)
+            if (userManager.FindByEmailAsync("abc@xyz.com").Result == null &&
+                userManager.FindByEmailAsync("recep@xyz.com").Result == null)
             {
-                IdentityUser user = new IdentityUser
+                ApplicationUser user = new ApplicationUser
                 {
                     UserName = "abc@xyz.com",
                     Email = "abc@xyz.com"
                 };
 
-                IdentityResult result = userManager.CreateAsync(user, "Test123@").Result;
+                ApplicationUser user1 = new ApplicationUser
+                {
+                    UserName = "recep@xyz.com",
+                    Email = "recep@xyz.com"
+                };
 
-                if (result.Succeeded)
+                IdentityResult result = userManager.CreateAsync(user, "Test123@").Result;
+                IdentityResult result1 = userManager.CreateAsync(user1, "Recep123@").Result;
+
+                if (result.Succeeded && result1.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, "Admin").Wait();
+                    userManager.AddToRoleAsync(user, "Receptionist").Wait();
                 }
             }
+
         }
     }
 }
