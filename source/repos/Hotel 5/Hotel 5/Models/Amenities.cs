@@ -11,5 +11,6 @@ namespace Hotel_5.Models
         [Key]
         public int AmenityId { get; set; }
         public string AmenityName { get; set; }
+        public double Price { get; set; }
     }
 }

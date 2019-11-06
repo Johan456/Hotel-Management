@@ -18,6 +18,7 @@ namespace Hotel_5.Models
         public int RoomId { get; set; }
         [ForeignKey("UserRefId")]
         public String UserId { get; set; }
+        public double ReservationPrice { get; set; }
 
     }
 }

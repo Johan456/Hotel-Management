@@ -30,7 +30,7 @@ namespace Hotel_5.Controllers
             return View();
         }
 
-        private List<int> roomsAvailable(DateTime CheckInDate, DateTime CheckOutDate)
+        private List<int> roomsAvailable(DateTime CheckInDate, DateTime CheckOutDate, RoomTypes roomTypes)
         {
             var bookedRooms = (from r in dbContext.Rooms
                                join b in dbContext.Bookings
@@ -43,6 +43,7 @@ namespace Hotel_5.Controllers
                                && b.CheckInDate <= CheckOutDate))
                                select r.RoomId).ToHashSet();
             var allRooms = (from r in dbContext.Rooms
+                            where r.RoomType == roomTypes
                             select r.RoomId).ToHashSet();
             var availableRooms = allRooms.Except(bookedRooms);
             return availableRooms.ToList();
@@ -53,7 +54,7 @@ namespace Hotel_5.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookingId,CheckInDate,CheckOutDate")] Bookings bookings)
+        public async Task<IActionResult> Create([Bind("BookingId,CheckInDate,CheckOutDate,RoomType")] Bookings bookings, Rooms rooms)
         {
             if (ModelState.IsValid)
             {   
@@ -61,13 +62,14 @@ namespace Hotel_5.Controllers
                 if (bookings.CheckInDate < bookings.CheckOutDate && bookings.CheckInDate >= DateTime.Now)
                 {
                     //assign all the available rooms to this variable
-                    var avaRooms = roomsAvailable(bookings.CheckInDate, bookings.CheckOutDate);
+                    var avaRooms = roomsAvailable(bookings.CheckInDate, bookings.CheckOutDate, rooms.RoomType);
                     //check if there are any available rooms for the dates provided
                     if (avaRooms.Count > 0)
                     {
                         bookings.RoomId = avaRooms[0];
                         var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                         bookings.UserId = currentUserId;
+                        bookings.ReservationPrice = getReservationPrice(bookings.CheckInDate, bookings.CheckOutDate, rooms.RoomType);
                         dbContext.Add(bookings);
                         await dbContext.SaveChangesAsync();
                         return View("Views/Bookings/BookingSuccessful.cshtml");
@@ -80,6 +82,16 @@ namespace Hotel_5.Controllers
                 
             }
             return View(bookings);
+        }
+
+        public double getReservationPrice(DateTime CheckInDate, DateTime CheckOutDate, RoomTypes roomTypes)
+        {
+            var priceNight = (from pr in dbContext.Rooms
+                              where pr.RoomType == roomTypes
+                              select pr.PricePerNight).ToList();
+            double daysOfStay = (CheckOutDate - CheckInDate).TotalDays;
+            double reservationPrice = daysOfStay * priceNight[0];
+            return reservationPrice;
         }
 
         public class UserBooking
