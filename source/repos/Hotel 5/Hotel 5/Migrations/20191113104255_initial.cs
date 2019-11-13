@@ -8,19 +8,6 @@ namespace Hotel_5.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Amenities",
-                columns: table => new
-                {
-                    AmenityId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AmenityName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Amenities", x => x.AmenityId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -71,25 +58,12 @@ namespace Hotel_5.Migrations
                     CheckInDate = table.Column<DateTime>(nullable: false),
                     CheckOutDate = table.Column<DateTime>(nullable: false),
                     RoomId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true),
+                    ReservationPrice = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bookings", x => x.BookingId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payment",
-                columns: table => new
-                {
-                    PaymentId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<int>(nullable: false),
-                    TotalExpenses = table.Column<double>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payment", x => x.PaymentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,7 +72,8 @@ namespace Hotel_5.Migrations
                 {
                     RoomId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PricePerNight = table.Column<double>(nullable: false)
+                    PricePerNight = table.Column<double>(nullable: false),
+                    RoomType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -214,12 +189,12 @@ namespace Hotel_5.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "0513644b-d0fe-4f4c-a04f-9038cec2693c", "55f3eef5-1f84-461d-8224-72d531a599fb", "Admin", "ADMIN" });
+                values: new object[] { "f79bc690-4dab-43f9-a14f-8fcf2cb884ae", "12075b58-07af-46e1-9861-5d252b2ea372", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "b364e5b4-b114-4ed1-9e05-3909caa58494", "02d3ef45-2482-46d6-a241-6967c1988b6a", "Receptionist", "RECEPTIONIST" });
+                values: new object[] { "71f84395-e78b-4763-8be4-28b89907a405", "2cb5296e-4172-4832-8b3e-38fe956879aa", "Receptionist", "RECEPTIONIST" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -264,9 +239,6 @@ namespace Hotel_5.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Amenities");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -283,9 +255,6 @@ namespace Hotel_5.Migrations
 
             migrationBuilder.DropTable(
                 name: "Bookings");
-
-            migrationBuilder.DropTable(
-                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

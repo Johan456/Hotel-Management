@@ -11,23 +11,38 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Dynamic;
+using Hotel_5.ViewModel;
+using Microsoft.AspNet.Identity;
 
 namespace Hotel_5.Controllers
 {
     public class BookingsController : Controller
     {
         private readonly ApplicationDbContext dbContext;
+       
 
         public BookingsController(ApplicationDbContext context)
         {
             dbContext = context;
+           
         }
-
 
         // GET: Bookings/Create
         public IActionResult Create()
         {
-            return View();
+
+            Bookings myBooking = new Bookings {
+                AmenitiesList = new List<Amenities> { 
+                    new Amenities { AmenityId = 0, AmenityName="TV", IsSelected = false, AmenityPrice = 20.0 },
+                    new Amenities { AmenityId = 1, AmenityName="Shower", IsSelected = false, AmenityPrice = 10.0 },
+                    new Amenities { AmenityId = 2, AmenityName="HairDryer", IsSelected = false, AmenityPrice = 15.0 },
+                    new Amenities { AmenityId = 2, AmenityName="DrinkCabinet", IsSelected = false, AmenityPrice = 25.0 }
+                },
+            };
+
+            BookingRoom bookingRoom = new BookingRoom { booking = myBooking };
+
+            return View(bookingRoom);
         }
 
         private List<int> roomsAvailable(DateTime CheckInDate, DateTime CheckOutDate, RoomTypes roomTypes)
@@ -54,24 +69,33 @@ namespace Hotel_5.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookingId,CheckInDate,CheckOutDate,RoomType")] Bookings bookings, Rooms rooms)
+        public async Task<IActionResult> Create([Bind("CheckInDate, CheckOutDate, AmenitiesList, RoomType")] Bookings booking, Rooms room, BookingRoom bookingRoom, ApplicationUser appUser)
         {
+
             if (ModelState.IsValid)
-            {   
+            {
+
+         
+
                 //Check if the CheckInDate is smaller than the checkOutDate, otherwise return WrongDateError.cshtml
-                if (bookings.CheckInDate < bookings.CheckOutDate && bookings.CheckInDate >= DateTime.Now)
+                if (booking.CheckInDate < booking.CheckOutDate && booking.CheckInDate >= DateTime.Now)
                 {
                     //assign all the available rooms to this variable
-                    var avaRooms = roomsAvailable(bookings.CheckInDate, bookings.CheckOutDate, rooms.RoomType);
+                    var avaRooms = roomsAvailable(booking.CheckInDate, booking.CheckOutDate, room.RoomType);
                     //check if there are any available rooms for the dates provided
                     if (avaRooms.Count > 0)
                     {
-                        bookings.RoomId = avaRooms[0];
-                        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        bookings.UserId = currentUserId;
-                        bookings.ReservationPrice = getReservationPrice(bookings.CheckInDate, bookings.CheckOutDate, rooms.RoomType);
-                        dbContext.Add(bookings);
+                        booking.RoomId = avaRooms[0];
+                        //get current user
+                        booking.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        booking.ReservationPrice = getReservationPrice(booking.CheckInDate, booking.CheckOutDate, room.RoomType)
+                            + getAmenitiesPrice(booking.AmenitiesList);
+                        appUser.TimesBooked = getTimesBooked(booking.UserId);
+
+                        //dbContext.Update(appUser);
+                        dbContext.Add(booking);
                         await dbContext.SaveChangesAsync();
+
                         return View("Views/Bookings/BookingSuccessful.cshtml");
                     }
                     else
@@ -81,7 +105,7 @@ namespace Hotel_5.Controllers
                     return View("Views/Bookings/WrongDateError.cshtml");
                 
             }
-            return View(bookings);
+            return View(bookingRoom);
         }
 
         public double getReservationPrice(DateTime CheckInDate, DateTime CheckOutDate, RoomTypes roomTypes)
@@ -94,6 +118,31 @@ namespace Hotel_5.Controllers
             return reservationPrice;
         }
 
+     
+
+        public double getAmenitiesPrice(List<Amenities> amenities)
+        {
+            double totalAmenitiesPrice = 0;
+            for (int i = 0; i < amenities.Count; i++)
+            {
+                if(amenities[i].IsSelected)
+                {
+                    totalAmenitiesPrice += amenities[i].AmenityPrice;
+                }
+            }
+
+            return totalAmenitiesPrice;
+        }
+
+        public int getTimesBooked(string userId)
+        {
+            var timesBook = (from tm in dbContext.ApplicationUsers
+                             where tm.Id == userId
+                             select tm.TimesBooked).ToList();
+            timesBook[0]++;
+            return timesBook[0];
+        }
+
         public class UserBooking
         {
             public string userId { get; set; }
@@ -103,9 +152,33 @@ namespace Hotel_5.Controllers
             public int roomId { get; set; }
             public DateTime checkInDate { get; set; }
             public DateTime checkOutDate { get; set; }
-
             public UserBooking() { }
 
+        }
+
+        public class UserAmenities
+        {
+            public string userId { get; set; }
+            public string FirstName { get; set; }
+            public List<Amenities> amenitiesSel { get; set; }
+            public double Cost { get; set; }
+        }
+
+        public ActionResult getAllUserAmenities()
+        {
+            List<UserAmenities> userAmenities;
+            userAmenities = (from b in dbContext.Bookings
+                             join u in dbContext.ApplicationUsers
+                             on b.UserId equals u.Id
+                             //where (b.CheckInDate <= DateTime.Now
+                             //&& b.CheckOutDate >= DateTime.Now)
+                             select new UserAmenities
+                             {
+                                 userId = u.Id,
+                                 FirstName = u.FirstName,
+                                 amenitiesSel = b.AmenitiesList,
+                                 Cost = b.ReservationPrice}).ToList();
+            return View(userAmenities);
         }
 
         [Authorize(Roles = "Admin")]
@@ -115,8 +188,8 @@ namespace Hotel_5.Controllers
             userbooking  = (from b in dbContext.Bookings
                                join u in dbContext.ApplicationUsers
                                on b.UserId equals u.Id
-                               where(b.CheckInDate <= DateTime.Now
-                               && b.CheckOutDate >= DateTime.Now)
+                               //where(b.CheckInDate <= DateTime.Now
+                               //&& b.CheckOutDate >= DateTime.Now)
                                select new UserBooking{ 
                                userId = u.Id,
                                UserName = u.UserName,

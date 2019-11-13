@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel_5.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191106084725_booking_totalprice")]
-    partial class booking_totalprice
+    [Migration("20191113104255_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,24 +20,6 @@ namespace Hotel_5.Migrations
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Hotel_5.Models.Amenities", b =>
-                {
-                    b.Property<int>("AmenityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AmenityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.HasKey("AmenityId");
-
-                    b.ToTable("Amenities");
-                });
 
             modelBuilder.Entity("Hotel_5.Models.Bookings", b =>
                 {
@@ -64,24 +46,6 @@ namespace Hotel_5.Migrations
                     b.HasKey("BookingId");
 
                     b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("Hotel_5.Models.Payment", b =>
-                {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalExpenses")
-                        .HasColumnType("float");
-
-                    b.HasKey("PaymentId");
-
-                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("Hotel_5.Models.Rooms", b =>
@@ -131,15 +95,15 @@ namespace Hotel_5.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "aa5de617-aa94-4cd9-b740-cac7876943fd",
-                            ConcurrencyStamp = "34d18b2b-b531-44a4-aa71-a57b925241ac",
+                            Id = "f79bc690-4dab-43f9-a14f-8fcf2cb884ae",
+                            ConcurrencyStamp = "12075b58-07af-46e1-9861-5d252b2ea372",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4e509000-46b8-4d21-a34d-2e2586697139",
-                            ConcurrencyStamp = "a5c2a832-ce42-4a9d-b93a-afc4e0f58954",
+                            Id = "71f84395-e78b-4763-8be4-28b89907a405",
+                            ConcurrencyStamp = "2cb5296e-4172-4832-8b3e-38fe956879aa",
                             Name = "Receptionist",
                             NormalizedName = "RECEPTIONIST"
                         });

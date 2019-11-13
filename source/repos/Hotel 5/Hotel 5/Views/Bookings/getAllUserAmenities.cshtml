@@ -1,0 +1,36 @@
+﻿@model List<Hotel_5.Controllers.BookingsController.UserAmenities>
+@{
+    ViewData["Title"] = "All Guests in Rooms";
+}
+
+<h1>All Guests in Rooms</h1>
+
+<div>
+    <table class="table">
+        <tr>
+            <td>Guest</td>
+            <td>Room Nr.</td>
+            <td>Checked in date</td>
+            <td>Check out date</td>
+        </tr>
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td>
+                    @v.FirstName
+                </td>
+                <td>
+                    @v.Cost
+                </td>
+                <td>
+                    @foreach(Amenities i in v.amenitiesSel)
+                    {
+                        <h6>@i.AmenityName</h6>
+                    }
+                </td>
+            </tr>
+
+        }
+    </table>
+</div>
+

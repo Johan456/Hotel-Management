@@ -1,5 +1,6 @@
 ﻿@model Hotel_5.ViewModel.BookingRoom
 
+
 @{
     ViewData["Title"] = "Create";
 }
@@ -13,26 +14,50 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="bookings.CheckInDate" class="control-label"></label>
-                @Html.EditorFor(m => m.bookings.CheckInDate, "{0:dd/MM/yyyy}",
+                <label asp-for="booking.CheckInDate" class="control-label"></label>
+                @Html.EditorFor(m => m.booking.CheckInDate, "{0:dd/MM/yyyy}",
                new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                <span asp-validation-for="bookings.CheckInDate" class="text-danger"></span>
+                <span asp-validation-for="booking.CheckInDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="bookings.CheckOutDate" class="control-label"></label>
-                @Html.EditorFor(m => m.bookings.CheckOutDate, "{0:dd/MM/yyyy}",
+                <label asp-for="booking.CheckOutDate" class="control-label"></label>
+                @Html.EditorFor(m => m.booking.CheckOutDate, "{0:dd/MM/yyyy}",
                new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                <span asp-validation-for="bookings.CheckOutDate" class="text-danger"></span>
+                <span asp-validation-for="booking.CheckOutDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="rooms.RoomType" class="control-label"></label>
+                <label asp-for="room.RoomType" class="control-label"></label>
                 @Html.DropDownList("RoomType",
                     new SelectList(Enum.GetValues(typeof(RoomTypes))),
                     new { @class = "form-control" })
             </div>
+
+            <div class="form-group">
+
+                <label asp-for="booking.AmenitiesList" class="control-label"></label>
+                <br />
+
+                @for (int i = 0; i < Model.booking.AmenitiesList.Count; i++)
+                {
+
+                    @Html.HiddenFor(x => x.booking.AmenitiesList[i].AmenityId)
+                    @Html.CheckBoxFor(x => x.booking.AmenitiesList[i].IsSelected)
+                    @Html.DisplayFor(x => x.booking.AmenitiesList[i].AmenityName)
+                    @Html.HiddenFor(x => x.booking.AmenitiesList[i].AmenityName)
+                    @Html.HiddenFor(x => x.booking.AmenitiesList[i].AmenityPrice)
+
+                    <br />
+                }
+
+                @Html.ValidationMessageFor(model => model.booking.AmenitiesList, "", new { @class = "text-danger" })
+            </div>
+
+
+                
             
             <div class="form-group">
                 <input type="submit" value="Book" class="btn btn-primary" />
+               
             </div>
         </form>
     </div>

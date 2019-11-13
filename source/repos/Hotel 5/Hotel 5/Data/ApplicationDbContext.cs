@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Hotel_5.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace Hotel_5.Data
 {
     public class ApplicationDbContext : IdentityDbContext
@@ -18,10 +20,8 @@ namespace Hotel_5.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Bookings> Bookings { get; set; }
-        public DbSet<Payment> Payment { get; set; }
-        public DbSet<Amenities> Amenities { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
-
+            
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -29,8 +29,15 @@ namespace Hotel_5.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
+            //modelBuilder.Entity<Bookings>()
+            //.HasMany(c => c.AmenitiesList)
+            //.WithOne(e => e.Bookings);
+
+
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() });
             modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Receptionist", NormalizedName = "Receptionist".ToUpper() });
+            //modelBuilder.Entity<Amenities>().HasNoKey();
+            modelBuilder.Ignore<Amenities>();
         }
     }
 }

@@ -27,9 +27,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Amenities" asp-action="Index">Amenities</a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Bookings" asp-action="Create">Book</a>
 
@@ -40,7 +38,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Bookings" asp-action="getAllBookings">Current Guests</a>
                             </li>
                         }
-                        </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Bookings" asp-action="getAllUserAmenities">Current Amenities</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>

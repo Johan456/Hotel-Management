@@ -26,8 +26,15 @@ using Hotel_5.Models;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 3 "C:\Users\johan\source\repos\Hotel 5\Hotel 5\Views\_ViewImports.cshtml"
+using Hotel_5.Data;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"4271d16fe4153eb3c7842a3b77b3f6a567a505bf", @"/Views/Bookings/BookingSuccessful.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"1fab1bb6d0d6a35706c85e685a4556ecf79aff5a", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"57c59973c826d9a8c7a2db0e0651a80654416fc7", @"/Views/_ViewImports.cshtml")]
     public class Views_Bookings_BookingSuccessful : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<Hotel_5.Models.Bookings>
     {
         #pragma warning disable 1998
